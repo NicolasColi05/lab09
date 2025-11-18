@@ -42,10 +42,16 @@ public class BadIOGUI {
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        final JPanel canvas2 = new JPanel();
+        canvas2.setLayout(new BoxLayout(canvas2, BoxLayout.X_AXIS));
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        final JButton read = new JButton("read");
+        canvas.add(canvas2, BorderLayout.CENTER);
+        canvas2.add(write);
+        canvas2.add(read);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         /*
          * Handlers
          */
@@ -67,6 +73,20 @@ public class BadIOGUI {
                 }
             }
         });
+
+        read.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final File file = new File(PATH);
+                try {
+                    final List<String> text = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+                    System.out.println(text); //NOPMD just for exercise.
+                } catch (final IOException message) {
+                    message.printStackTrace(); //NOPMD just for exercise.
+                }
+            }
+        });
     }
 
     private void display() {
@@ -82,6 +102,7 @@ public class BadIOGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
+        frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
